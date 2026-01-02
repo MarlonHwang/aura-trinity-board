@@ -6,7 +6,7 @@ import modules.gemini_brain as brain
 # [CONFIG] 시스템 설정 및 좌표
 # ==========================================
 # CEO가 하달한 Nexus(Gist) 접선 장소 -> [변경] GitHub Lighthouse (AURA_NEXUS.md)
-NEXUS_URL_RAW = "https://raw.githubusercontent.com/MarlonHwang/aura-trinity-board/main/AURA_NEXUS.md"
+NEXUS_URL_RAW = "https://gist.githubusercontent.com/MarlonHwang/c623d6f42e9e2867c6ac273a813a5392/raw/AURA_NEXUS.md"
 
 st.set_page_config(
     page_title="AURA TRINITY v2.3",
@@ -51,8 +51,9 @@ with st.sidebar:
 # ==========================================
 def fetch_nexus_log():
     try:
-        # 캐시 방지용 파라미터 추가
-        response = requests.get(f"{NEXUS_URL_RAW}?t={st.session_state.get('refresh_count', 0)}")
+        # [Cache Buster] Gist CDN 캐시를 뚫기 위해 무작위 타임스탬프 추가
+        import time
+        response = requests.get(f"{NEXUS_URL_RAW}?v={str(time.time())}")
         if response.status_code == 200:
             return response.text
         else:
