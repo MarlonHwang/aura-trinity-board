@@ -20,6 +20,7 @@ st.set_page_config(
 with st.sidebar:
     st.title("👁️ TRINITY CONTROL")
     st.caption("Hybrid Communication Hub")
+    st.caption("🚀 System Version: v2.1 (Live)")
     
     # 연결 상태 확인
     if "gemini" in st.secrets:
