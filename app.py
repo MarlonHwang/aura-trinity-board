@@ -26,15 +26,15 @@ with st.sidebar:
     model_option = st.selectbox(
         "사용할 모델을 선택하세요:",
         (
-            "gemini-3-flash-preview",    # [CEO Pick] 가장 성능이 좋음
-            "gemini-2.0-flash-exp",      # [추천] 빠르고 똑똑함
-            "gemini-1.5-flash",          # [안정] 안정적인 버전
+            "gemini-2.0-flash-exp",      # [추천] 용량 넉넉하고 똑똑함 (New Default)
+            "gemini-1.5-flash",          # [안정] 무제한급 안정성
+            "gemini-3-flash-preview",    # [주의] 성능 최고이나 횟수 제한 있음 (Quota)
             "gemini-1.5-pro",            # [고성능]
         ),
         index=0
     )
-    st.caption(f"🚀 System Version: v3.0 (Trinity Awakening)")
-    st.toast("🧠 Brain Upgrade Complete: TRINITY COMMANDER Online")
+    st.caption(f"🚀 System Version: v3.1 (Stable Brain)")
+    st.toast("✅ Brain Switched to Gemini 2.0 (High Limit)")
     
     # 연결 상태 확인 및 초기화
     if "gemini" in st.secrets:
