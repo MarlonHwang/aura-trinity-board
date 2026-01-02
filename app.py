@@ -20,7 +20,20 @@ st.set_page_config(
 with st.sidebar:
     st.title("👁️ TRINITY CONTROL")
     st.caption("Hybrid Communication Hub")
-    st.caption("🚀 System Version: v2.1 (Live)")
+    
+    # [복구] Model Selector
+    st.subheader("🧠 AI Brain Select")
+    model_option = st.selectbox(
+        "사용할 모델을 선택하세요:",
+        (
+            "gemini-2.0-flash-exp",     # [추천] 가장 빠르고 똑똑함
+            "gemini-1.5-flash",          # [안정] 안정적인 버전
+            "gemini-1.5-pro",            # [고성능]
+            "gemini-3-flash-preview"     # [실험]
+        ),
+        index=0
+    )
+    st.caption(f"🚀 System Version: v2.2 (Brain Restore)")
     
     # 연결 상태 확인 및 초기화
     if "gemini" in st.secrets:
@@ -82,9 +95,9 @@ with tab2:
 
         # 2. AI 응답 생성 (여기에 '관제관 페르소나'가 적용됨)
         with st.chat_message("assistant"):
-            with st.spinner("Analyzing..."):
+            with st.spinner(f"Thinking with {model_option}..."):
                 # modules/gemini_brain.py의 get_response 함수 호출
-                response_text = brain.get_response(st.session_state.messages, prompt)
+                response_text = brain.get_response(st.session_state.messages, prompt, model_name=model_option)
                 st.markdown(response_text)
         
         # 3. AI 응답 저장
