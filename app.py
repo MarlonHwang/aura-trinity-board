@@ -1,72 +1,87 @@
 import streamlit as st
-from modules import gemini_brain, nexus_bridge, ui_components
+import requests
+import modules.gemini_brain as brain
 
-st.set_page_config(page_title="AURA TRINITY", layout="wide")
-ui_components.setup_style()
+# ==========================================
+# [CONFIG] 시스템 설정 및 좌표
+# ==========================================
+# CEO가 하달한 Nexus(Gist) 접선 장소
+NEXUS_URL_RAW = "https://gist.githubusercontent.com/MarlonHwang/0a8e7897456df5e6302830dab5390c06/raw"
 
-# --- [사이드바 설정] ---
+st.set_page_config(
+    page_title="AURA TRINITY",
+    page_icon="👁️",
+    layout="wide"
+)
+
+# ==========================================
+# [SIDEBAR] 상태창 & 설정
+# ==========================================
 with st.sidebar:
-    st.title("🎛️ AURA CONTROL")
+    st.title("👁️ TRINITY CONTROL")
+    st.caption("Hybrid Communication Hub")
     
-    st.subheader("🧠 AI Brain Select")
-    model_option = st.selectbox(
-        "사용할 모델을 선택하세요:",
-        (
-            "gemini-3-flash-preview",    # [공식] Gemini 3 Flash (무료 티어 지원)
-            "gemini-3-pro-preview",      # [공식] Gemini 3 Pro (유료 가능성 있음)
-            "gemini-2.0-flash-exp",      # 2.0 실험 버전
-            "gemini-1.5-flash"           # 구버전 (비상용)
-        ),
-        index=0 # 기본값을 무료인 'Gemini 3 Flash'로 설정
-    )
-    
-    # 모델명 직접 입력 기능 (혹시 모를 상황 대비)
-    use_custom = st.checkbox("직접 모델명 입력")
-    if use_custom:
-        model_option = st.text_input("모델명 입력", value=model_option)
+    # 연결 상태 확인
+    if "gemini" in st.secrets:
+        st.success("🟢 AI Neural Net: Online")
+    else:
+        st.error("🔴 AI Neural Net: Offline")
 
-    st.info(f"선택된 두뇌: {model_option}")
-    st.markdown("---")
-    
-    gist_url = st.text_input("🔗 Gist Raw URL")
-    if st.button("🔄 시스템 재가동"):
+    if st.button("🔄 시스템 새로고침"):
         st.rerun()
 
-# --- [메인 로직] ---
-if "gemini_ready" not in st.session_state:
-    st.session_state.gemini_ready = gemini_brain.init_gemini()
+# ==========================================
+# [MAIN] 탭 레이아웃 (Monitor & Command)
+# ==========================================
+tab1, tab2 = st.tabs(["📡 MONITOR (Nexus)", "💬 COMMAND (Gemini)"])
 
-col1, col2 = st.columns([1, 1.2])
+# ------------------------------------------
+# TAB 1: NEXUS MONITOR (상황 관제)
+# ------------------------------------------
+with tab1:
+    st.subheader("📡 Real-time Operation Log")
+    try:
+        # Gist에서 실시간 로그 긁어오기 (캐시 방지용 파라미터 추가)
+        response = requests.get(f"{NEXUS_URL_RAW}?t={st.session_state.get('refresh_count', 0)}")
+        
+        if response.status_code == 200:
+            log_content = response.text
+            st.code(log_content, language="json") # 또는 text, yaml 등 로그 형식에 맞춰 변경
+            st.caption(f"📍 Target: {NEXUS_URL_RAW}")
+        else:
+            st.warning("⚠️ Nexus 신호가 미약합니다. (Gist 연결 실패)")
+            
+    except Exception as e:
+        st.error(f"❌ 통신 오류 발생: {e}")
 
-with col1:
-    st.subheader("📡 LOCAL AGENT LOG")
-    if gist_url:
-        log_data = nexus_bridge.get_nexus_log(gist_url)
-        ui_components.render_log_box(log_data)
-    else:
-        st.info("👈 Gist URL을 입력하세요.")
+# ------------------------------------------
+# TAB 2: COMMAND CENTER (지시 하달)
+# ------------------------------------------
+with tab2:
+    st.subheader("💬 Command Interface")
 
-with col2:
-    st.subheader("💬 COMMAND CENTER")
-    
+    # 대화 기록 초기화
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
+    # 이전 대화 출력
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
-            st.write(message["content"])
+            st.markdown(message["parts"][0]["text"])
 
-    if prompt := st.chat_input("명령을 입력하세요..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
+    # 사용자 입력 대기
+    if prompt := st.chat_input("CEO님의 명령을 입력하십시오..."):
+        # 1. 사용자 메시지 표시
         with st.chat_message("user"):
-            st.write(prompt)
+            st.markdown(prompt)
+        st.session_state.messages.append({"role": "user", "parts": [{"text": prompt}]})
 
-        if st.session_state.gemini_ready:
-            with st.chat_message("assistant"):
-                with st.spinner(f"Thinking with {model_option}..."):
-                    # [핵심] 선택한 model_option을 전달
-                    history_context = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.messages if m["role"] != "system"]
-                    response = gemini_brain.get_response(history_context, prompt, model_name=model_option)
-                    st.write(response)
-            
-            st.session_state.messages.append({"role": "assistant", "content": response})
+        # 2. AI 응답 생성 (여기에 '관제관 페르소나'가 적용됨)
+        with st.chat_message("assistant"):
+            with st.spinner("Analyzing..."):
+                # modules/gemini_brain.py의 get_response 함수 호출
+                response_text = brain.get_response(st.session_state.messages, prompt)
+                st.markdown(response_text)
+        
+        # 3. AI 응답 저장
+        st.session_state.messages.append({"role": "model", "parts": [{"text": response_text}]})
