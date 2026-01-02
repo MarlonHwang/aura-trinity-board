@@ -26,15 +26,15 @@ with st.sidebar:
     model_option = st.selectbox(
         "사용할 모델을 선택하세요:",
         (
-            "gemini-2.0-flash-exp",     # [추천] 가장 빠르고 똑똑함
+            "gemini-3-flash-preview",    # [CEO Pick] 가장 성능이 좋음
+            "gemini-2.0-flash-exp",      # [추천] 빠르고 똑똑함
             "gemini-1.5-flash",          # [안정] 안정적인 버전
             "gemini-1.5-pro",            # [고성능]
-            "gemini-3-flash-preview"     # [실험]
         ),
         index=0
     )
-    st.caption(f"🚀 System Version: v2.3 (Visual Check)")
-    st.toast("🔥 System Updated to v2.3!")
+    st.caption(f"🚀 System Version: v2.4 (Gemini 3 Standard)")
+    st.toast("🔥 Default Brain: Gemini 3 Flash")
     
     # 연결 상태 확인 및 초기화
     if "gemini" in st.secrets:
