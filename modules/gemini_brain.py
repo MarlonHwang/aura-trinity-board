@@ -14,8 +14,8 @@ def init_gemini():
         st.error(f"🚨 연결 오류: {e}")
         return False
 
-# [핵심 수정] model_name을 인자로 받아서 처리함
-def get_response(history, user_input, model_name="gemini-3-flash-preview"):
+# [핵심 수정] model_name을 인자로 받아서 처리함 + nexus_context(시각 정보) 추가
+def get_response(history, user_input, model_name="gemini-2.5-flash", nexus_context=None):
     try:
         # [핵심 수정] 예절 교육 (System Instruction) 추가
         # 모델에게 "너는 비서고, 존댓말을 써야 한다"고 미리 세뇌시킴
@@ -42,7 +42,20 @@ def get_response(history, user_input, model_name="gemini-3-flash-preview"):
             gemini_history.append({"role": role, "parts": msg["parts"]})
 
         chat = model.start_chat(history=gemini_history)
-        response = chat.send_message(user_input)
+        
+        # [Context Injection] 만약 Nexus 로그가 있다면, 질문 앞에 몰래 붙여서 보냄
+        final_prompt = user_input
+        if nexus_context:
+            final_prompt = f"""
+            [SYSTEM: REAL-TIME SECURE NEXUS LOG START]
+            {nexus_context}
+            [SYSTEM: REAL-TIME SECURE NEXUS LOG END]
+            
+            [CEO REQUEST]:
+            {user_input}
+            """
+            
+        response = chat.send_message(final_prompt)
         
         return response.text
 

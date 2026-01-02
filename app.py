@@ -31,8 +31,8 @@ with st.sidebar:
         ),
         index=0
     )
-    st.caption(f"🚀 System Version: v3.4 (Lighthouse Sync)")
-    st.toast("📡 Nexus Source: GitHub Repository")
+    st.caption(f"🚀 System Version: v3.5 (Nexus Vision)")
+    st.toast("👁️ Nexus Vision: Online (RAG Active)")
     
     # 연결 상태 확인 및 초기화
     if "gemini" in st.secrets:
@@ -47,6 +47,20 @@ with st.sidebar:
         st.rerun()
 
 # ==========================================
+# [HELPER] Nexus 통신 모듈
+# ==========================================
+def fetch_nexus_log():
+    try:
+        # 캐시 방지용 파라미터 추가
+        response = requests.get(f"{NEXUS_URL_RAW}?t={st.session_state.get('refresh_count', 0)}")
+        if response.status_code == 200:
+            return response.text
+        else:
+            return None
+    except Exception:
+        return None
+
+# ==========================================
 # [MAIN] 탭 레이아웃 (Monitor & Command)
 # ==========================================
 tab1, tab2 = st.tabs(["📡 MONITOR (Nexus)", "💬 COMMAND (Gemini)"])
@@ -56,20 +70,15 @@ tab1, tab2 = st.tabs(["📡 MONITOR (Nexus)", "💬 COMMAND (Gemini)"])
 # ------------------------------------------
 with tab1:
     st.subheader("📡 Real-time Operation Log")
-    try:
-        # Gist에서 실시간 로그 긁어오기 (캐시 방지용 파라미터 추가)
-        response = requests.get(f"{NEXUS_URL_RAW}?t={st.session_state.get('refresh_count', 0)}")
-        
-        if response.status_code == 200:
-            log_content = response.text
-            # [시각화 업그레이드] Raw Code 대신 Markdown으로 렌더링
-            st.markdown(log_content)
-            st.caption(f"📍 Source: Nexus Gist (Live)")
-        else:
-            st.warning("⚠️ Nexus 신호가 미약합니다. (Gist 연결 실패)")
-            
-    except Exception as e:
-        st.error(f"❌ 통신 오류 발생: {e}")
+    
+    log_content = fetch_nexus_log()
+    
+    if log_content:
+        # [시각화 업그레이드] Raw Code 대신 Markdown으로 렌더링
+        st.markdown(log_content)
+        st.caption(f"📍 Source: Nexus Gist (Live)")
+    else:
+        st.warning("⚠️ Nexus 신호가 미약합니다. (GitHub 연결 실패)")
 
 # ------------------------------------------
 # TAB 2: COMMAND CENTER (지시 하달)
@@ -95,9 +104,17 @@ with tab2:
 
         # 2. AI 응답 생성 (여기에 '관제관 페르소나'가 적용됨)
         with st.chat_message("assistant"):
-            with st.spinner(f"Thinking with {model_option}..."):
-                # modules/gemini_brain.py의 get_response 함수 호출
-                response_text = brain.get_response(st.session_state.messages, prompt, model_name=model_option)
+            # [Nexus Vision] 답변 직전에 몰래 로그를 훔쳐옴
+            current_nexus_context = fetch_nexus_log()
+            
+            with st.spinner(f"Thinking with {model_option} + Nexus Vision..."):
+                # modules/gemini_brain.py의 get_response 함수 호출 (nexus_context 전달)
+                response_text = brain.get_response(
+                    history=st.session_state.messages, 
+                    user_input=prompt, 
+                    model_name=model_option,
+                    nexus_context=current_nexus_context  # <--- 핵심: 시력 공급
+                )
                 st.markdown(response_text)
         
         # 3. AI 응답 저장
