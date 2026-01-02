@@ -9,8 +9,8 @@ import modules.gemini_brain as brain
 NEXUS_URL_RAW = "https://gist.githubusercontent.com/MarlonHwang/0a8e7897456df5e6302830dab5390c06/raw"
 
 st.set_page_config(
-    page_title="AURA TRINITY",
-    page_icon="👁️",
+    page_title="AURA TRINITY v2.3",
+    page_icon="�",
     layout="wide"
 )
 
@@ -33,7 +33,8 @@ with st.sidebar:
         ),
         index=0
     )
-    st.caption(f"🚀 System Version: v2.2 (Brain Restore)")
+    st.caption(f"🚀 System Version: v2.3 (Visual Check)")
+    st.toast("🔥 System Updated to v2.3!")
     
     # 연결 상태 확인 및 초기화
     if "gemini" in st.secrets:
