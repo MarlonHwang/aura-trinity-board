@@ -31,8 +31,8 @@ with st.sidebar:
         ),
         index=0
     )
-    st.caption(f"🚀 System Version: v3.5 (Nexus Vision)")
-    st.toast("👁️ Nexus Vision: Online (RAG Active)")
+    st.caption(f"🚀 System Version: v4.0 (Trinity Bell)")
+    st.toast("🔔 Notification System Online")
     
     # 연결 상태 확인 및 초기화
     if "gemini" in st.secrets:
@@ -61,6 +61,20 @@ def fetch_nexus_log():
         return None
 
 # ==========================================
+# [HELPER] Telegram 경보 발송
+# ==========================================
+def send_telegram_alert(message):
+    try:
+        if "telegram" in st.secrets:
+            token = st.secrets["telegram"]["bot_token"]
+            chat_id = st.secrets["telegram"]["chat_id"]
+            url = f"https://api.telegram.org/bot{token}/sendMessage"
+            payload = {"chat_id": chat_id, "text": message}
+            requests.post(url, json=payload)
+    except Exception:
+        pass # 조용히 실패
+
+# ==========================================
 # [MAIN] 탭 레이아웃 (Monitor & Command)
 # ==========================================
 tab1, tab2 = st.tabs(["📡 MONITOR (Nexus)", "💬 COMMAND (Gemini)"])
@@ -74,9 +88,18 @@ with tab1:
     log_content = fetch_nexus_log()
     
     if log_content:
-        # [시각화 업그레이드] Raw Code 대신 Markdown으로 렌더링
+        # [Visual] Markdown 렌더링
         st.markdown(log_content)
         st.caption(f"📍 Source: Nexus Gist (Live)")
+        
+        # [ALERT] 긴급 호출 코드 감지
+        if "[CALL CEO]" in log_content:
+            st.error("🚨 EMERGENCY CALL DETECTED! (Sending Alert...)")
+            # 세션에 기록해서 중복 발송 방지 (간이 로직)
+            if not st.session_state.get("alert_sent", False):
+                send_telegram_alert("🚨 [TRINITY ALERT]\nNexus에서 긴급 호출 신호가 감지되었습니다!\n즉시 상황판을 확인하십시오.")
+                st.session_state["alert_sent"] = True
+                st.toast("🚨 Telegram Alert Sent!")
     else:
         st.warning("⚠️ Nexus 신호가 미약합니다. (GitHub 연결 실패)")
 
