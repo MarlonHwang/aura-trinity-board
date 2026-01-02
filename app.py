@@ -31,8 +31,8 @@ with st.sidebar:
         ),
         index=0
     )
-    st.caption(f"🚀 System Version: v3.2 (Gemini 2.5 Standard)")
-    st.toast("✅ Default Brain: Gemini 2.5 Flash")
+    st.caption(f"🚀 System Version: v3.3 (Visual Patch)")
+    st.toast("🎨 Nexus Monitor: UI Optimized")
     
     # 연결 상태 확인 및 초기화
     if "gemini" in st.secrets:
@@ -62,8 +62,9 @@ with tab1:
         
         if response.status_code == 200:
             log_content = response.text
-            st.code(log_content, language="json") # 또는 text, yaml 등 로그 형식에 맞춰 변경
-            st.caption(f"📍 Target: {NEXUS_URL_RAW}")
+            # [시각화 업그레이드] Raw Code 대신 Markdown으로 렌더링
+            st.markdown(log_content)
+            st.caption(f"📍 Source: Nexus Gist (Live)")
         else:
             st.warning("⚠️ Nexus 신호가 미약합니다. (Gist 연결 실패)")
             
