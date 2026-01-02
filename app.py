@@ -33,8 +33,8 @@ with st.sidebar:
         ),
         index=0
     )
-    st.caption(f"🚀 System Version: v2.4 (Gemini 3 Standard)")
-    st.toast("🔥 Default Brain: Gemini 3 Flash")
+    st.caption(f"🚀 System Version: v3.0 (Trinity Awakening)")
+    st.toast("🧠 Brain Upgrade Complete: TRINITY COMMANDER Online")
     
     # 연결 상태 확인 및 초기화
     if "gemini" in st.secrets:
