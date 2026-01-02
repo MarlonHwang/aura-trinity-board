@@ -26,15 +26,13 @@ with st.sidebar:
     model_option = st.selectbox(
         "사용할 모델을 선택하세요:",
         (
-            "gemini-2.0-flash-exp",      # [추천] 용량 넉넉하고 똑똑함 (New Default)
-            "gemini-1.5-flash",          # [안정] 무제한급 안정성
-            "gemini-3-flash-preview",    # [주의] 성능 최고이나 횟수 제한 있음 (Quota)
-            "gemini-1.5-pro",            # [고성능]
+            "gemini-2.5-flash",          # [CEO Pick] 현재 지원되는 안정적인 모델
+            "gemini-3-flash",            # [옵션] 고성능 (Quota 주의)
         ),
         index=0
     )
-    st.caption(f"🚀 System Version: v3.1 (Stable Brain)")
-    st.toast("✅ Brain Switched to Gemini 2.0 (High Limit)")
+    st.caption(f"🚀 System Version: v3.2 (Gemini 2.5 Standard)")
+    st.toast("✅ Default Brain: Gemini 2.5 Flash")
     
     # 연결 상태 확인 및 초기화
     if "gemini" in st.secrets:
