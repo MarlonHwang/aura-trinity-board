@@ -5,8 +5,8 @@ import modules.gemini_brain as brain
 # ==========================================
 # [CONFIG] 시스템 설정 및 좌표
 # ==========================================
-# CEO가 하달한 Nexus(Gist) 접선 장소
-NEXUS_URL_RAW = "https://gist.githubusercontent.com/MarlonHwang/0a8e7897456df5e6302830dab5390c06/raw"
+# CEO가 하달한 Nexus(Gist) 접선 장소 -> [변경] GitHub Lighthouse (AURA_NEXUS.md)
+NEXUS_URL_RAW = "https://raw.githubusercontent.com/MarlonHwang/aura-trinity-board/main/AURA_NEXUS.md"
 
 st.set_page_config(
     page_title="AURA TRINITY v2.3",
@@ -31,8 +31,8 @@ with st.sidebar:
         ),
         index=0
     )
-    st.caption(f"🚀 System Version: v3.3 (Visual Patch)")
-    st.toast("🎨 Nexus Monitor: UI Optimized")
+    st.caption(f"🚀 System Version: v3.4 (Lighthouse Sync)")
+    st.toast("📡 Nexus Source: GitHub Repository")
     
     # 연결 상태 확인 및 초기화
     if "gemini" in st.secrets:
