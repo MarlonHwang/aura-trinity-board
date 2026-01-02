@@ -14,7 +14,7 @@ from modules import nexus_bridge
 # [CONFIGURATION]
 # ==========================================
 SECRETS_PATH = ".streamlit/secrets.toml"
-NEXUS_URL_RAW = "https://raw.githubusercontent.com/MarlonHwang/aura-trinity-board/main/AURA_NEXUS.md"
+NEXUS_URL_RAW = "https://gist.githubusercontent.com/MarlonHwang/c623d6f42e9e2867c6ac273a813a5392/raw/AURA_NEXUS.md"
 
 def load_secrets():
     try:
