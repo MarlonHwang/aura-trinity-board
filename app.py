@@ -31,8 +31,8 @@ with st.sidebar:
         ),
         index=0
     )
-    st.caption(f"🚀 System Version: v4.0 (Trinity Bell)")
-    st.toast("🔔 Notification System Online")
+    st.caption(f"🚀 System Version: v4.1 (Command Protocol)")
+    st.toast("⚔️ Trinity Commander: Strict Mode On")
     
     # 연결 상태 확인 및 초기화
     if "gemini" in st.secrets:
