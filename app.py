@@ -22,9 +22,12 @@ with st.sidebar:
     st.caption("Hybrid Communication Hub")
     st.caption("🚀 System Version: v2.1 (Live)")
     
-    # 연결 상태 확인
+    # 연결 상태 확인 및 초기화
     if "gemini" in st.secrets:
-        st.success("🟢 AI Neural Net: Online")
+        if brain.init_gemini():
+            st.success("🟢 AI Neural Net: Online")
+        else:
+            st.error("🔴 AI Neural Net: Error")
     else:
         st.error("🔴 AI Neural Net: Offline")
 
