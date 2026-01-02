@@ -1,26 +1,26 @@
 import os
 import time
 
-def mission_deploy():
-    print("🤖 [Antigravity] : CEO님의 명령을 수신했습니다. 클라우드 배포를 시작합니다.")
+def auto_deploy_sequence():
+    print("🤖 [Antigravity] : CEO님의 승인을 확인했습니다. 클라우드 배포 시퀀스를 가동합니다.")
     
-    # 1. 파일 담기
-    print("📦 [1/3] 변경 사항 패킹 중 (git add)...")
+    # 1. 포장하기 (git add)
+    print("📦 [1/3] 파일 패킹 중...")
     os.system("git add .")
     
-    # 2. 송장 붙이기
-    print("📝 [2/3] 배포 승인 도장 찍는 중 (git commit)...")
-    os.system('git commit -m "CEO 지시사항: AURA TRINITY 시스템 업데이트"')
+    # 2. 도장찍기 (git commit)
+    print("📝 [2/3] 업데이트 승인 도장 날인...")
+    os.system('git commit -m "Update: AURA TRINITY V2 (Tab System & Auto-Nexus)"')
     
-    # 3. 쏘기
-    print("🚀 [3/3] 클라우드로 전송 발사! (git push)...")
-    push_result = os.system("git push")
+    # 3. 발사 (git push)
+    print("🚀 [3/3] GitHub 본부로 전송 시작! (Pushing...)")
+    result = os.system("git push")
     
-    if push_result == 0:
-        print("\n✅ [Success] : 전송 완료! Streamlit이 1~2분 뒤 자동으로 오븐에서 구워집니다.")
-        print("👉 잠시 후 웹사이트에서 [F5]를 눌러주세요.")
+    if result == 0:
+        print("\n✅ [MISSION SUCCESS] 전송 완료! 1분 뒤 Streamlit 서버가 자동으로 재부팅됩니다.")
+        print("👉 웹사이트에서 [F5]를 눌러 확인하십시오.")
     else:
-        print("\n❌ [Fail] : 전송 실패. (로그인이 필요하거나 충돌이 발생했습니다.)")
+        print("\n❌ [ERROR] 전송 실패. (로그인 문제거나 인터넷 연결을 확인하세요.)")
 
 if __name__ == "__main__":
-    mission_deploy()
+    auto_deploy_sequence()
